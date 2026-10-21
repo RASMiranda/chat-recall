@@ -15,6 +15,10 @@ Fast, local, full-text search across **all** your claude.ai chats, scoped to **a
 
 The first sync reads every chat once (3 at a time, with backoff); later syncs fetch only chats whose `updated_at` changed. Results appear as indexing progresses.
 
+## Install
+
+**Firefox:** install from [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/chat-recall/).
+
 ## Install for testing
 
 **Chrome / Edge:** `chrome://extensions` → Developer mode → *Load unpacked* → select `dist/chrome`.

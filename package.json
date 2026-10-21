@@ -1,6 +1,6 @@
 {
   "name": "chat-recall",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local full-text search across all your claude.ai chats (Chrome + Firefox, MV3).",
   "license": "MIT",
   "private": true,

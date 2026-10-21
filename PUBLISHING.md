@@ -26,6 +26,7 @@ GitHub Actions (`.github/workflows/build.yml`) tests, builds, and lints on every
 - Not using remote code: true (all code is in the package).
 
 ## Firefox (AMO)
+- Listing: https://addons.mozilla.org/en-US/firefox/addon/chat-recall/
 - Free developer account.
 - Upload `dist/chat-recall-firefox-<version>.zip`. The manifest declares `data_collection_permissions: none` and a minimum Firefox of 140 (Android 142), matching `web-ext lint`.
 - AMO may ask for the source: the build has no bundler or minification, so the zip is the source; also attach the repo.
