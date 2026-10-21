@@ -1,0 +1,71 @@
+name: Build and release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed only to create/update the draft release on tag builds
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Make sure the zip tool exists
+        run: which zip || sudo apt-get install -y zip
+
+      - name: Unit tests
+        run: npm test
+
+      - name: UI smoke test (jsdom, fake claude.ai API)
+        run: |
+          npm install --no-save jsdom
+          node scripts/smoke-ui.js
+
+      - name: Tag must match package.json version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "v$PKG" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $PKG. Bump the version, commit, and tag again."
+            exit 1
+          fi
+
+      - name: Build Chrome and Firefox packages
+        run: npm run build
+
+      - name: Lint the Firefox build
+        run: npx --yes web-ext lint --source-dir dist/firefox
+
+      - name: Source archive (exact commit)
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          git archive --format=zip -o "dist/chat-recall-source-${VERSION}.zip" HEAD
+
+      - name: Keep the zips from every build
+        uses: actions/upload-artifact@v4
+        with:
+          name: chat-recall-zips
+          path: dist/*.zip
+          if-no-files-found: error
+
+      - name: Draft release with the zips (tag builds only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="$GITHUB_REF_NAME"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/*.zip --clobber
+          else
+            gh release create "$TAG" dist/*.zip --draft --title "Chat Recall ${TAG#v}" --notes "Automated build of $TAG. Unofficial; not affiliated with Anthropic. It reads claude.ai's undocumented internal API, so it may break when claude.ai changes. Install for testing: Firefox: about:debugging -> This Firefox -> Load Temporary Add-on -> manifest.json from the unzipped firefox build. Chrome: chrome://extensions -> Developer mode -> Load unpacked -> the unzipped chrome build."
+          fi

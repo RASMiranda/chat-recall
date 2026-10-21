@@ -10,6 +10,13 @@ Everything below is unverified against the stores' current rules unless a source
 5. Bump `version` in `package.json` for every submission.
 6. Read Anthropic's terms regarding automated access to claude.ai before publishing; this extension uses undocumented endpoints.
 
+## Releasing (automatic zips)
+GitHub Actions (`.github/workflows/build.yml`) tests, builds, lints, and attaches the Chrome, Firefox, and source zips to a **draft** release when a version tag is pushed. No local build needed.
+1. Bump `version` in `package.json`, commit, push to `main`.
+2. `git tag v<version>` (must match `package.json`) then `git push origin v<version>`.
+3. Open the repo's Actions tab, wait for the green run, then Releases: review the draft and publish it. Upload those zips to the stores.
+Every push to `main` also uploads the zips as a workflow artifact (Actions run page, kept for a limited time).
+
 ## Chrome Web Store
 - Needs a developer account; I believe there is a one-time registration fee (not verified).
 - Upload `dist/chat-recall-chrome-<version>.zip`.
