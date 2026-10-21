@@ -1,0 +1,24 @@
+{
+  "name": "chat-recall",
+  "version": "0.1.0",
+  "description": "Local full-text search across all your claude.ai chats (Chrome + Firefox, MV3).",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "build": "node scripts/build.js",
+    "lint:firefox": "npx --yes web-ext lint --source-dir dist/firefox"
+  },
+  "funding": {
+    "type": "ko_fi",
+    "url": "https://ko-fi.com/rasmiranda"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RASMiranda/chat-recall.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RASMiranda/chat-recall/issues"
+  },
+  "homepage": "https://github.com/RASMiranda/chat-recall#readme"
+}

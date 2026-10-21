@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat Recall</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1>Chat Recall</h1>
+  <p class="sub">Local search for your claude.ai chats. Press <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd> on claude.ai.</p>
+
+  <dl>
+    <dt>Chats indexed</dt><dd id="count">–</dd>
+    <dt>Status</dt><dd id="status">–</dd>
+    <dt>Last sync</dt><dd id="last">–</dd>
+  </dl>
+
+  <p id="note" class="note" hidden></p>
+
+  <div class="row">
+    <button id="sync" type="button">Sync now</button>
+    <button id="rebuild" type="button">Rebuild index</button>
+    <button id="clear" type="button" class="danger">Clear index</button>
+  </div>
+
+  <label class="check"><input id="auto" type="checkbox"> Sync automatically when claude.ai opens</label>
+
+  <p class="fine">Everything stays in this browser. The only requests made are to claude.ai itself, using your existing login. Open claude.ai in a tab for sync buttons to work.</p>
+  <p id="support" class="support" hidden><a id="donate" target="_blank" rel="noopener noreferrer">♥ Support development</a></p>
+  <script src="../config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
