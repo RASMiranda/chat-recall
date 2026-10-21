@@ -55,10 +55,6 @@ Chat Recall is free and open source. If it saves you time, you can support its d
 
 <!-- donate:end -->
 
-## Monetisation (honest notes)
-
-There is no server, so there is nothing to bill against. Realistic free options: a donation link in the store listing. Subscriptions would need a backend and a payment provider (not free). Ads inside extensions are restricted by the stores' policies; check current rules before adding any. Because the code is MIT, others may fork it.
-
 ## License
 
 MIT, see `LICENSE`.
