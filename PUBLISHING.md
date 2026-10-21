@@ -15,6 +15,7 @@ GitHub Actions (`.github/workflows/build.yml`) tests, builds, lints, and attache
 1. Bump `version` in `package.json`, commit, push to `main`.
 2. `git tag v<version>` (must match `package.json`) then `git push origin v<version>`.
 3. Open the repo's Actions tab, wait for the green run, then Releases: review the draft and publish it. Upload those zips to the stores.
+**No tag push needed (works from a browser):** repo -> Actions -> "Build and release" -> Run workflow -> tick "Create a draft release..." -> Run. It builds from `main` and creates the draft release `v<version>` with the three zips. Publishing that draft later creates the tag, which re-runs the build once and refreshes the attached zips (same content).
 Every push to `main` also uploads the zips as a workflow artifact (Actions run page, kept for a limited time).
 
 ## Chrome Web Store
