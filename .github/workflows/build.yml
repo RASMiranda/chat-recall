@@ -63,15 +63,17 @@ jobs:
           path: dist/*.zip
           if-no-files-found: error
 
-      - name: Draft release with the zips (tag pushes, or a manual run with "release" ticked on main)
-        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release && github.ref == 'refs/heads/main')
+      - name: Draft release with the zips (once per version)
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.release)))
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           PKG="$(node -p "require('./package.json').version")"
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then TAG="$GITHUB_REF_NAME"; else TAG="v$PKG"; fi
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" dist/*.zip --clobber
-          else
-            gh release create "$TAG" dist/*.zip --draft --target "$GITHUB_SHA" --title "Chat Recall ${TAG#v}" --notes "Automated build of $TAG. Unofficial; not affiliated with Anthropic. It reads claude.ai's undocumented internal API, so it may break when claude.ai changes. Install for testing: Firefox: about:debugging -> This Firefox -> Load Temporary Add-on -> manifest.json from the unzipped firefox build. Chrome: chrome://extensions -> Developer mode -> Load unpacked -> the unzipped chrome build."
+          # `gh release list` includes drafts; `gh release view <tag>` does not find them.
+          EXISTS="$(gh release list --limit 200 --json tagName --jq "[.[] | select(.tagName == \"$TAG\")] | length")"
+          if [ "$EXISTS" != "0" ]; then
+            echo "A release for $TAG already exists (draft or published); leaving it untouched. To rebuild it, delete the draft and push again."
+            exit 0
           fi
+          gh release create "$TAG" dist/*.zip --draft --target "$GITHUB_SHA" --title "Chat Recall ${TAG#v}" --notes "Automated build of $TAG. Unofficial; not affiliated with Anthropic. It reads claude.ai's undocumented internal API, so it may break when claude.ai changes. Install for testing: Firefox: about:debugging -> This Firefox -> Load Temporary Add-on -> manifest.json from the unzipped firefox build. Chrome: chrome://extensions -> Developer mode -> Load unpacked -> the unzipped chrome build."

@@ -10,13 +10,14 @@ Everything below is unverified against the stores' current rules unless a source
 5. Bump `version` in `package.json` for every submission.
 6. Read Anthropic's terms regarding automated access to claude.ai before publishing; this extension uses undocumented endpoints.
 
-## Releasing (automatic zips)
-GitHub Actions (`.github/workflows/build.yml`) tests, builds, lints, and attaches the Chrome, Firefox, and source zips to a **draft** release when a version tag is pushed. No local build needed.
+## Releasing (automatic zips, no tags or tokens needed)
+GitHub Actions (`.github/workflows/build.yml`) tests, builds, and lints on every push. When a push to `main` contains a `package.json` version that has no release yet, it creates a **draft** release `v<version>` with the Chrome, Firefox, and source zips attached.
 1. Bump `version` in `package.json`, commit, push to `main`.
-2. `git tag v<version>` (must match `package.json`) then `git push origin v<version>`.
-3. Open the repo's Actions tab, wait for the green run, then Releases: review the draft and publish it. Upload those zips to the stores.
-**No tag push needed (works from a browser):** repo -> Actions -> "Build and release" -> Run workflow -> tick "Create a draft release..." -> Run. It builds from `main` and creates the draft release `v<version>` with the three zips. Publishing that draft later creates the tag, which re-runs the build once and refreshes the attached zips (same content).
-Every push to `main` also uploads the zips as a workflow artifact (Actions run page, kept for a limited time).
+2. Open the repo's Actions tab and wait for the green run, then Releases: review the draft and publish it. Upload those zips to the stores.
+- Re-pushes never touch an existing release (draft or published). To rebuild one, delete the draft and push again, or use Actions -> Run workflow with "release" ticked.
+- Pushing a `v*` tag or ticking the box in Run workflow does the same thing.
+- Publishing the draft creates the tag on GitHub.
+- Every run also keeps the zips as a workflow artifact (Actions run page, kept for a limited time).
 
 ## Chrome Web Store
 - Needs a developer account; I believe there is a one-time registration fee (not verified).
