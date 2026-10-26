@@ -21,8 +21,8 @@ The first sync reads every chat once (3 at a time, with backoff); later syncs fe
 
 ## Install for testing
 
-**Chrome / Edge:** `chrome://extensions` → Developer mode → *Load unpacked* → select `dist/chrome`.
-**Firefox:** `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → select `dist/firefox/manifest.json`. After installing, open `about:addons` → Chat Recall → **Permissions** and make sure access to claude.ai is **on** (Firefox treats host access as optional for MV3 extensions; if it is off nothing appears).
+* **Chrome / Edge:** `chrome://extensions` → Developer mode → *Load unpacked* → select `dist/chrome`.
+* **Firefox:** `about:debugging#/runtime/this-firefox` → *Load Temporary Add-on* → select `dist/firefox/manifest.json`. After installing, open `about:addons` → Chat Recall → **Permissions** and make sure access to claude.ai is **on** (Firefox treats host access as optional for MV3 extensions; if it is off nothing appears).
 
 ## Build and test
 
