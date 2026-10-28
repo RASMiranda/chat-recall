@@ -31,6 +31,7 @@ GitHub Actions (`.github/workflows/build.yml`) tests, builds, and lints on every
 - Upload `dist/chat-recall-firefox-<version>.zip`. The manifest declares `data_collection_permissions: none` and a minimum Firefox of 140 (Android 142), matching `web-ext lint`.
 - AMO may ask for the source: the build has no bundler or minification, so the zip is the source; also attach the repo.
 - Reviewers will need a claude.ai account to test; say so in the reviewer notes.
+- Version notes ("What's new") for 0.1.2: "Fixed: pasting into the search box with the right-click menu now works instead of going to the chat message box." Reviewer note: this only changes event handling in `src/content.js` (no new permissions).
 
 ## Donation link
 <!-- donate-listing:start -->

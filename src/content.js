@@ -191,7 +191,8 @@
       h('span', null, t('hints.nav')), h('span', null, t('hints.open')), h('span', null, t('hints.newTab')), h('span', null, t('hints.close')));
     const foot = h('div', { class: 'foot' }, h('span', null, status, syncBtn), hints);
     const panel = h('div', { class: 'panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Chat Recall search' }, h('div', { class: 'top' }, input, chips), results, foot);
-    const overlay = h('div', { class: 'overlay', onmousedown: (e) => { if (e.target === overlay) closePalette(); } }, panel);
+    // Close only on a real outside click (primary button): a right-click on the backdrop opens the browser menu.
+    const overlay = h('div', { class: 'overlay', onmousedown: (e) => { if (e.target === overlay && e.button === 0) closePalette(); } }, panel);
     root.append(style, overlay);
 
     input.addEventListener('input', () => {
@@ -199,6 +200,20 @@
       S.timer = setTimeout(runSearch, 80);
     });
     panel.addEventListener('keydown', onPanelKey);
+
+    // claude.ai has document-level handlers that redirect paste/typing/focus to its composer. Events from the
+    // palette must not reach them (they arrive retargeted to the host), or e.g. "Paste" from the browser's
+    // context menu lands in the composer instead of here. Native default actions are not affected.
+    for (const type of ['paste', 'beforeinput', 'input', 'keydown', 'keyup', 'keypress', 'contextmenu', 'focusin', 'focusout', 'compositionstart', 'compositionupdate', 'compositionend']) {
+      host.addEventListener(type, (e) => e.stopPropagation());
+    }
+    // If something else grabs focus while the palette is open (page focus management, the context menu closing), take it back.
+    input.addEventListener('blur', () => {
+      setTimeout(() => {
+        const a = root.activeElement;
+        if (S.open && S.ui?.input === input && document.hasFocus() && !(a && panel.contains(a))) input.focus();
+      }, 0);
+    });
 
     return { host, root, panel, input, scopeBtns, senderBtns, results, status, syncBtn };
   }
